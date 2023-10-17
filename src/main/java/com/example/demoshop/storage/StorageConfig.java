@@ -24,7 +24,7 @@ public class StorageConfig implements WebMvcConfigurer {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		String storageLocation = Paths.get(storageProperties.getLocation()).toAbsolutePath().toUri().toString();
 		log.info("storage location: {}", storageLocation);
-		registry.addResourceHandler("/files/**").addResourceLocations(storageLocation)
+		registry.addResourceHandler("/api/files/**").addResourceLocations(storageLocation)
 				.setCacheControl(CacheControl.maxAge(Duration.ofHours(1)));
 		;
 	}

@@ -2,10 +2,15 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.4'
 	id 'io.spring.dependency-management' version '1.1.3'
+	id "com.github.node-gradle.node" version "7.0.1"
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
+
+ext {
+	webProjectDir = file(property('web.projectDir'))
+}
 
 java {
 	sourceCompatibility = '17'
@@ -41,4 +46,22 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+
+node {
+    // The Node.js project directory location
+    // This is where the package.json file and node_modules directory are located
+    // By default it is at the root of the current project
+    nodeProjectDir = file(webProjectDir)
+}
+
+task buildWebApp(type: NpmTask) {
+	dependsOn npmInstall
+	args = ['run', 'build']
+}
+
+processResources {
+	dependsOn buildWebApp
+	from(webProjectDir.path + '/build') {into('public')}
 }
